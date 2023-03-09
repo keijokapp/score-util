@@ -1,0 +1,25 @@
+{
+  "type": "module",
+  "name": "score-util",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/create-video.js",
+  "author": "Keijo Kapp <keijo.kapp@gmail.com>",
+  "license": "ISC",
+  "scripts": {
+    "lint": "eslint lib"
+  },
+  "bin": {
+    "score-util": "bin/score-util.js",
+    "create-musescore-video": "bin/create-musescore-video.js"
+  },
+  "devDependencies": {
+    "eslint": "^8.35.0",
+    "eslint-config-airbnb-base": "^15.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "fast-xml-parser": "^4.1.3",
+    "rimraf": "^4.4.0"
+  }
+}
