@@ -30,7 +30,9 @@ if (audioFiles.length === 0) {
 	process.exit(1);
 }
 
-const lengths = await Promise.all(audioFiles.map(file => getAudioLength(`audio/${file}`)));
+const lengths = await Promise.all(audioFiles.map(
+	file => getAudioLength(path.join('audio', file), { ffprobe: args.values.ffprobe })
+));
 assert(lengths.every(length => length === lengths[0]));
 
 console.log('Loading score media for %s', chalk.bold(path.basename(musescoreFile)));
