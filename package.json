@@ -7,7 +7,7 @@
   "author": "Keijo Kapp <keijo.kapp@gmail.com>",
   "license": "ISC",
   "scripts": {
-    "lint": "eslint lib"
+    "lint": "eslint bin lib"
   },
   "bin": {
     "score-util": "bin/score-util.js",
