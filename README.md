@@ -13,15 +13,15 @@ npm i -g https://github.com/keijokapp/score-util
 
 Requirements:
 
- - Modern NodeJS
- - MuseScore 4 (`mscore` binary; possibly also works with earlier versions)
- - ffmpeg
+ - Node 20 or later
+ - MuseScore 4 (possibly also works with earlier versions)
+ - ffmpeg and ffprobe
 
 ## `create-musescore-video`
 
 **Usage:** `create-musescore-video input.mscz output.mp4`
 
-Creates a video file from MuseScore file. It does this by extracting SVG-s and playback synchronization info with `mscore --extract-media`. It then creates frame images, each being an SVG with a cursor line drawn according to synchronization data.
+Creates a video file from MuseScore file. It does this by extracting SVG-s and playback synchronization info with `mscore --score-media`. It then creates frame images, each being an SVG with a cursor line drawn according to synchronization data.
 
 **Limitations:**
  - **The generated video does not have audio**. MuseScore does not support exporting audio using Muse Sounds via CLI. Audio could be manually exported and added to the video separately. Eg: `ffmpeg -i silent-video.mp4 -i audio.wav -c:v copy -shortest video-with-audio.mp4` (`-shortest` is there because the audio exported from MuseScore is unnecessarily about 2 seconds longer than the playback)
