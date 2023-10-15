@@ -14,8 +14,8 @@
     "create-musescore-video": "bin/create-musescore-video.js"
   },
   "devDependencies": {
-    "eslint": "^8.42.0",
-    "eslint-config-airbnb-base": "^15.0.0"
+    "@arbendium/eslint-config-base": "^0.2.1",
+    "eslint": "^8.57.0"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.4.1",
