@@ -27,7 +27,6 @@ Creates a video file from MuseScore file. It does this by extracting SVG-s and p
  - **The generated video does not have audio**. MuseScore does not support exporting audio using Muse Sounds via CLI. Audio could be manually exported and added to the video separately. Eg: `ffmpeg -i silent-video.mp4 -i audio.wav -c:v copy -shortest video-with-audio.mp4` (`-shortest` is there because the audio exported from MuseScore is unnecessarily about 2 seconds longer than the playback)
  - Encoding SVG-s to video is quite slow (tested to be <1x).
  - Video frames are cut out directly from SVG-s, so if systems are too close together, they might not be separated cleanly.
- - The video width is harcoded to page width and aspect ration is hardcoded to 16:9. Higher systems might not fit into that rectangle and are clipped. It's still better than what the online service does because it does not make systems shorter and more zoomed in than in the original score.
 
 These limitations are not relevant to current use cases but feel free to create an issue if they are for you.
 
