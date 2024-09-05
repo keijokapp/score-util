@@ -7,19 +7,19 @@
   "author": "Keijo Kapp <keijo.kapp@gmail.com>",
   "license": "ISC",
   "scripts": {
-    "lint": "eslint bin lib"
+    "lint": "eslint bin lib eslint.config.js"
   },
   "bin": {
     "score-util": "bin/score-util.js",
     "create-musescore-video": "bin/create-musescore-video.js"
   },
   "devDependencies": {
-    "@arbendium/eslint-config-base": "^0.2.1",
-    "eslint": "^8.57.0"
+    "@arbendium/eslint-config-base": "^2.0.0",
+    "eslint": "^9.18.0"
   },
   "dependencies": {
-    "@resvg/resvg-js": "^2.4.1",
-    "chalk": "^5.2.0",
-    "fast-xml-parser": "^4.2.4"
+    "@resvg/resvg-js": "^2.6.2",
+    "chalk": "^5.4.1",
+    "fast-xml-parser": "^4.5.1"
   }
 }
