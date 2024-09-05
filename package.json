@@ -7,7 +7,8 @@
   "author": "Keijo Kapp <keijo.kapp@gmail.com>",
   "license": "ISC",
   "scripts": {
-    "lint": "eslint bin lib eslint.config.js"
+    "lint": "eslint bin lib eslint.config.js",
+    "typecheck": "tsc"
   },
   "bin": {
     "score-util": "bin/score-util.js",
@@ -15,7 +16,9 @@
   },
   "devDependencies": {
     "@arbendium/eslint-config-base": "^2.0.0",
-    "eslint": "^9.18.0"
+    "@types/node": "^22.10.10",
+    "eslint": "^9.18.0",
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",

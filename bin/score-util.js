@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// @ts-check
+
 import assert from 'assert';
 import { execFileSync } from 'child_process';
 import fs from 'fs/promises';
@@ -37,7 +39,7 @@ function getArgs() {
 				}
 			}
 		});
-	} catch (e) {
+	} catch (/** @type {any} */e) {
 		console.error(e.message);
 
 		process.exit(1);
@@ -119,7 +121,7 @@ for (const audioFile of audioFiles) {
 
 	console.log('Creating video %s', chalk.bold(path.basename(exportVideoFile)));
 
-	execFileSync(args.values.ffmpeg, [
+	execFileSync(/** @type {string} */(args.values.ffmpeg), [
 		'-y',
 		'-i', videoFile,
 		'-i', path.join(audioDirectory, audioFile),
