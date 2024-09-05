@@ -4,7 +4,7 @@ export default [
 	...base,
 	{
 		rules: {
-			'no-console': 'off',
+			'no-console': 'off'
 		}
 	}
 ];
