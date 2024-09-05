@@ -11,13 +11,21 @@ import path from 'path';
 import chalk from 'chalk';
 import createVideo from '../lib/create-video.js';
 import modifyScore from '../lib/modify-score.js';
-import { getAudioLength, scoreMedia, tmpfile } from '../lib/utils.js';
+import {
+	getAudioLength, parseChannels, scoreMedia, tmpfile
+} from '../lib/utils.js';
+import createAudio from '../lib/create-audio.js';
 
 function getArgs() {
 	try {
 		return util.parseArgs({
 			allowPositionals: true,
 			options: {
+				audio: {
+					type: 'string',
+					multiple: true,
+					short: 'a'
+				},
 				ffmpeg: {
 					type: 'string',
 					default: 'ffmpeg'
@@ -62,7 +70,7 @@ if (args.values.version) {
 }
 
 if (args.values.help || args.positionals.length !== 0) {
-	console.log(`Usage: score-util [--ffmpeg=ffmpeg] [--ffprobe=ffprobe] [--mscore=mscore]
+	console.log(`Usage: score-util [--ffmpeg=ffmpeg] [--ffprobe=ffprobe] [--mscore=mscore] [--audio outputname/track1=0,track2=-13...]...
 
 Options:
  -h,--help       show help text
@@ -70,10 +78,35 @@ Options:
  --ffmpeg=FILE   path to ffmpeg executable
  --ffprobe=FILE  path to ffprobe executable
  --mscore=FILE   path to MuseScore (mscore) executable
+ -audio outputname/track1=0,track2=-13... export audio from score automatically with given configuration; can be specified multiple types
 `);
 
 	process.exit(args.values.help ? 0 : 1);
 }
+
+const newAudioFiles = args.values.audio != null
+	? args.values.audio.map(arg => {
+		const slashIndex = arg.indexOf('/');
+
+		if (slashIndex === -1) {
+			return [arg, {}];
+		}
+
+		const audioName = arg.slice(0, slashIndex);
+
+		const channels = parseChannels(arg.slice(slashIndex + 1));
+
+		if (channels.every(channel => channel != null)) {
+			return /** @type {[string, Record<string, number>]} */(
+				[audioName, Object.fromEntries(channels)]
+			);
+		}
+
+		console.error('Invalid audio specifier: ', arg);
+
+		process.exit(1);
+	})
+	: [];
 
 const rootDirectory = path.resolve('.');
 const audioDirectory = path.join(rootDirectory, 'audio');
@@ -81,7 +114,27 @@ const exportDirectory = path.join(rootDirectory, 'export');
 
 const name = path.basename(rootDirectory);
 const musescoreFile = path.join(rootDirectory, `${name}.mscz`);
-const videoFile = path.join(rootDirectory, `${name}.mp4`);
+
+const temporaryPrefix = await tmpfile();
+const temporaryVideoFile = `${temporaryPrefix}.mp4`;
+const temporaryScoreFile = `${temporaryPrefix}.mscz`;
+
+if (newAudioFiles.length) {
+	await fs.mkdir(audioDirectory).catch(e => {
+		if (e.code !== 'EEXIST') {
+			throw e;
+		}
+	});
+
+	for (const [name, channels] of newAudioFiles) {
+		const audioFile = path.join(audioDirectory, `${name}.wav`);
+
+		console.log('Exporting audio: %s', chalk.bold(audioFile));
+
+		await modifyScore(musescoreFile, temporaryScoreFile, channels);
+		await createAudio(temporaryScoreFile, audioFile, { mscore: args.values.mscore });
+	}
+}
 
 const audioFiles = await fs.readdir(audioDirectory).catch(e => {
 	if (e.code === 'ENOENT') {
@@ -104,16 +157,15 @@ assert(lengths.every(length => length === lengths[0]));
 
 console.log('Reconfiguring score %s for export', chalk.bold(path.basename(musescoreFile)));
 
-const temporaryScoreFile = `${await tmpfile()}.mscz`;
-await modifyScore(musescoreFile, temporaryScoreFile);
+await modifyScore(musescoreFile, temporaryScoreFile, {});
 
 console.log('Loading score media');
 
 const mediaInfo = await scoreMedia(temporaryScoreFile, { mscore: args.values.mscore });
 
-console.log('Creating video %s', chalk.bold(path.basename(videoFile)));
+console.log('Creating video');
 
-await createVideo(mediaInfo, videoFile, { ffmpeg: args.values.ffmpeg });
+await createVideo(mediaInfo, undefined, temporaryVideoFile, { ffmpeg: args.values.ffmpeg });
 
 await fs.mkdir(exportDirectory).catch(e => {
 	if (e.code !== 'EEXIST') {
@@ -128,7 +180,7 @@ for (const audioFile of audioFiles) {
 
 	execFileSync(/** @type {string} */(args.values.ffmpeg), [
 		'-y',
-		'-i', videoFile,
+		'-i', temporaryVideoFile,
 		'-i', path.join(audioDirectory, audioFile),
 		'-c:v', 'copy', // video can be copied directly but MP4 does not support WAV audio
 		'-shortest',
