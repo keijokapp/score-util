@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// @ts-check
+
 import module from 'module';
 import util from 'util';
 import chalk from 'chalk';
@@ -29,7 +31,7 @@ function getArgs() {
 				}
 			}
 		});
-	} catch (e) {
+	} catch (/** @type {any} */e) {
 		console.error(e.message);
 
 		process.exit(1);
