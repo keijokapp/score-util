@@ -81,7 +81,6 @@ const exportDirectory = path.join(rootDirectory, 'export');
 const name = path.basename(rootDirectory);
 const musescoreFile = path.join(rootDirectory, `${name}.mscz`);
 const videoFile = path.join(rootDirectory, `${name}.mp4`);
-const pdfFile = path.join(rootDirectory, `${name}.pdf`);
 
 const audioFiles = await fs.readdir(audioDirectory).catch(e => {
 	if (e.code === 'ENOENT') {
@@ -103,9 +102,6 @@ assert(lengths.every(length => length === lengths[0]));
 
 console.log('Loading score media for %s', chalk.bold(path.basename(musescoreFile)));
 const mediaInfo = await scoreMedia(musescoreFile, { mscore: args.values.mscore });
-
-console.log('Creating PDF %s', chalk.bold(path.basename(pdfFile)));
-await fs.writeFile(pdfFile, Buffer.from(mediaInfo.pdf, 'base64'));
 
 console.log('Creating video %s', chalk.bold(path.basename(videoFile)));
 await createVideo(mediaInfo, videoFile, { ffmpeg: args.values.ffmpeg });

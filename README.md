@@ -48,7 +48,6 @@ Given that the utility is run in a working directory with the following structur
 It generates the following files:
 ```
  /path/to/some-score
- ├─ some-score.pdf                -- PDF export of the score file
  ├─ some-score.mp4                -- video without audio
  └─ export
     ├─ some-score.mp4             -- video with audio from some-score.wav

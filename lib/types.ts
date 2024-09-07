@@ -1,7 +1,6 @@
 export interface ScoreMedia {
 	metadata: { duration: number }
 	mposXML: string
-	pdf: string
 	sposXML: string
 	svgs: string[]
 }
