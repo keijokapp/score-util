@@ -5,8 +5,9 @@
 import module from 'module';
 import util from 'util';
 import chalk from 'chalk';
-import { scoreMedia } from '../lib/utils.js';
 import createVideo from '../lib/create-video.js';
+import modifyScore from '../lib/modify-score.js';
+import { scoreMedia, tmpfile } from '../lib/utils.js';
 
 function getArgs() {
 	try {
@@ -67,7 +68,16 @@ Options:
 
 const [musescoreFile, videoFile] = args.positionals;
 
-console.log('Loading score media for %s', chalk.bold(musescoreFile));
-const mediaInfo = await scoreMedia(musescoreFile, { mscore: args.values.mscore });
+console.log('Reconfiguring score %s for export', chalk.bold(musescoreFile));
+
+const temporaryScoreFile = `${await tmpfile()}.mscz`;
+
+await modifyScore(musescoreFile, temporaryScoreFile);
+
+console.log('Loading score media for %s', chalk.bold(temporaryScoreFile));
+
+const mediaInfo = await scoreMedia(temporaryScoreFile, { mscore: args.values.mscore });
+
+console.log('Creating video %s', chalk.bold(videoFile));
 
 await createVideo(mediaInfo, videoFile, { ffmpeg: args.values.ffmpeg });

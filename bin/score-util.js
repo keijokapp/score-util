@@ -10,7 +10,8 @@ import util from 'util';
 import path from 'path';
 import chalk from 'chalk';
 import createVideo from '../lib/create-video.js';
-import { getAudioLength, scoreMedia } from '../lib/utils.js';
+import modifyScore from '../lib/modify-score.js';
+import { getAudioLength, scoreMedia, tmpfile } from '../lib/utils.js';
 
 function getArgs() {
 	try {
@@ -92,6 +93,7 @@ const audioFiles = await fs.readdir(audioDirectory).catch(e => {
 
 if (audioFiles.length === 0) {
 	console.warn('No audio files');
+
 	process.exit(1);
 }
 
@@ -100,10 +102,17 @@ const lengths = await Promise.all(audioFiles.map(
 ));
 assert(lengths.every(length => length === lengths[0]));
 
-console.log('Loading score media for %s', chalk.bold(path.basename(musescoreFile)));
-const mediaInfo = await scoreMedia(musescoreFile, { mscore: args.values.mscore });
+console.log('Reconfiguring score %s for export', chalk.bold(path.basename(musescoreFile)));
+
+const temporaryScoreFile = `${await tmpfile()}.mscz`;
+await modifyScore(musescoreFile, temporaryScoreFile);
+
+console.log('Loading score media');
+
+const mediaInfo = await scoreMedia(temporaryScoreFile, { mscore: args.values.mscore });
 
 console.log('Creating video %s', chalk.bold(path.basename(videoFile)));
+
 await createVideo(mediaInfo, videoFile, { ffmpeg: args.values.ffmpeg });
 
 await fs.mkdir(exportDirectory).catch(e => {
