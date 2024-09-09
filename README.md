@@ -1,5 +1,6 @@
 **This package exports 2 scripts:**
 
+ - `create-musescore-audio` - an utility to generate audio files from MuseScore files with configurable channel volumes
  - `create-musescore-video` - an utility to generate videos from MuseScore files
  - `score-util` - used to generate videos with different audio tracks
 
@@ -17,11 +18,17 @@ Requirements:
  - MuseScore 4 (possibly also works with earlier versions)
  - ffmpeg and ffprobe
 
+## `create-musescore-audio`
+
+**Usage:** `create-musescore-audio [--audio=soprano=-13,alto=-13...] input.mscz output.wav`
+
+Creates a audio file from MuseScore file. `--audio` option can be used to override volumes of individual instruments. Channel names are part ID-s as defined in the `audiosettings.json` in the MuseScore file.
+
 ## `create-musescore-video`
 
 **Usage:** `create-musescore-video [--audio=soprano=-13,alto=-13...] input.mscz output.mp4`
 
-Creates a video file from MuseScore file. It does this by extracting SVG-s and playback synchronization info with `mscore --score-media`. It then creates frame images, each being an SVG with a cursor line drawn according to synchronization data. `--audio` option can be used to override volumes of individual instruments. Channel names are instrument ID-s as defined in the `audiosettings.json` in the MuseScore file.
+Creates a video file from MuseScore file. It does this by extracting SVG-s and playback synchronization info with `mscore --score-media`. It then creates frame images, each being an SVG with a cursor line drawn according to synchronization data. `--audio` option can be used to override volumes of individual instruments.
 
 ## `score-util`
 

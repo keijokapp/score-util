@@ -12,6 +12,7 @@
   },
   "bin": {
     "score-util": "bin/score-util.js",
+    "create-musescore-audio": "bin/create-musescore-audio.js",
     "create-musescore-video": "bin/create-musescore-video.js"
   },
   "devDependencies": {
