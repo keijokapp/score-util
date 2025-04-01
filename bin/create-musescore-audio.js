@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-// @ts-check
-
 import module from 'module';
 import util from 'util';
 import modifyScore from '../lib/modify-score.js';

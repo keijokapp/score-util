@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-// @ts-check
-
 import assert from 'assert';
 import { execFileSync } from 'child_process';
 import fs from 'fs/promises';
