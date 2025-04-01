@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "checkJs": true,
     "exactOptionalPropertyTypes": true,
-    "lib": ["esnext"],
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "preserve",
     "noEmit": true,
-    "strict": true
+    "strict": true,
+    "target": "esnext"
   }
 }
